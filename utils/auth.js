@@ -61,6 +61,7 @@
 
 import JsonWebToken from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 // Load environment variables
 dotenv.config({
@@ -70,7 +71,7 @@ dotenv.config({
 const isAuthenticated = async (req, res, next) => {
     try {
         const jsonToken = req.cookies.jsonToken;
-        console.log("Cookies: ", req.cookies); // Log cookies for debugging
+        console.log("Cookies: ", req); // Log cookies for debugging
 
         if (!jsonToken) {
             console.log("No token found in cookies."); // Debug log
@@ -79,6 +80,8 @@ const isAuthenticated = async (req, res, next) => {
                 status: false
             });
         }
+
+
 
         // Verify the token
         JsonWebToken.verify(jsonToken, process.env.TOKEN_SECRET, (err, decode) => {
