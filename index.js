@@ -27,7 +27,8 @@ app.use(cookieParser());  // to use cookies
 // Basic Middlewares to be used.
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    // origin: 'http://localhost:5173',
+    origin: 'https://twitter-clone-front-end.vercel.app/login',
     credentials: true
 }
 
