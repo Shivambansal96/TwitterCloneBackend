@@ -139,7 +139,7 @@ export const Login = async(req, res) => {
 
         console.log('JSON TOKEN = ', jsonToken);
 
-        return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d', httpOnly: true}).json({
+        return res.status(201).cookie('jsonToken', jsonToken, { maxAge: 2 * 24 * 60 * 60 * 1000, sameSite: 'lax' ,expiresIn:'2d', httpOnly: true}).json({
             message: `Welcome back ${user.name}`,
             user,
             success: true
