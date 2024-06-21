@@ -3,6 +3,60 @@ import bcryptjs from 'bcryptjs'
 import { User } from '../models/userSchema.js';
 import jsonWebToken from 'jsonwebtoken'
 
+// extra 
+import multer from 'multer';
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const dir = './uploads/';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+        cb(null, dir);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+
+export const upload = multer({ storage: storage });
+
+// Profile update controller
+export const updateProfile = async (req, res) => {
+    try {
+        const { bio } = req.body;
+        const profileImage = req.files.profileImage ? req.files.profileImage[0].path : null;
+        const backgroundImage = req.files.backgroundImage ? req.files.backgroundImage[0].path : null;
+
+        const userId = req.user.userId; // Assuming userId is stored in req.user after authentication
+
+        const updateData = {
+            bio: bio || "",
+        };
+
+        if (profileImage) updateData.profileImage = profileImage;
+        if (backgroundImage) updateData.backgroundImage = backgroundImage;
+
+        const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
+
+        res.status(200).json({
+            message: 'Profile updated successfully',
+            user: updatedUser
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+        });
+    }
+};
+
+
+// extra 
+
+
 
 export const Register = async(req, res) => {
 
@@ -14,7 +68,6 @@ export const Register = async(req, res) => {
                 message: 'All details need to be filled.',
                 success: false
             })
-
         }
 
         const user = await User.findOne({email})
