@@ -37,7 +37,9 @@ const isAuthenticated = async (req, res, next) => {
                             process.env.TOKEN_SECRET, 
                             { expiresIn: '2d' } // Adjust the expiration as needed
                         );
-                        res.cookie('jsonToken', newToken, {sameSite: 'none', expiresIn: '2d' , httpOnly: true });
+                        res.cookie('jsonToken', newToken, { expiresIn: '2d' , httpOnly: true, sameSite: 'none'  });
+
+                        // sameSite: 'none' =  this is to allow cross-origin
 
                         req.user = decoded.userId;
                         next();
