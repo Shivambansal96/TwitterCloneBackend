@@ -37,7 +37,7 @@ const isAuthenticated = async (req, res, next) => {
                             process.env.TOKEN_SECRET, 
                             { expiresIn: '2d' } // Adjust the expiration as needed
                         );
-                        res.cookie('jsonToken', newToken, { httpOnly: true });
+                        res.cookie('jsonToken', newToken, {sameSite: 'none', expiresIn: '2d' , httpOnly: true });
 
                         req.user = decoded.userId;
                         next();
