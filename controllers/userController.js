@@ -3,48 +3,6 @@ import bcryptjs from 'bcryptjs'
 import { User } from '../models/userSchema.js';
 import jsonWebToken from 'jsonwebtoken'
 
-// extra
-export const updateProfile = async (req, res) => {
-    try {
-        const { userId, backgroundImage, profileImage, bio } = req.body;
-
-        if (!userId) {
-            return res.status(400).json({
-                message: 'User ID is required',
-                success: false
-            });
-        }
-
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { backgroundImage, profileImage, bio },
-            { new: true }
-        );
-
-        if (!user) {
-            return res.status(401).json({
-                message: 'User not found',
-                success: false
-            });
-        }
-
-        return res.status(200).json({
-            message: 'Profile updated successfully',
-            user,
-            success: true
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: 'Internal Server Error',
-            success: false
-        });
-    }
-};
-
-// extra 
-
 
 export const Register = async(req, res) => {
 
@@ -125,6 +83,8 @@ export const Login = async(req, res) => {
         }
 
         const jsonToken = await jsonWebToken.sign(tokenData, process.env.TOKEN_SECRET, {expiresIn:'2d'})
+
+        console.log('JSON TOKEN = ', jsonToken);
 
         return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d', httpOnly: true}).json({
             message: `Welcome back ${user.name}`,
