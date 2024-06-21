@@ -9,8 +9,8 @@ dotenv.config({
 
 const isAuthenticated = async (req, res, next) => {
     try {
-        const {jsonToken} = req.cookie.jsonToken;  // line 73
-        console.log("Cookies: ", req.cookie); // Log cookies for debugging
+        const jsonToken = req.cookies.jsonToken;
+        console.log("Cookies: ", req.cookies.jsonToken); // Log cookies for debugging
        // // console.log("Cookies: ", req.cookies); // Log cookies for debugging
 
         if (!jsonToken) {
@@ -20,6 +20,9 @@ const isAuthenticated = async (req, res, next) => {
                 status: false
             });
         }
+
+
+
 
 
 

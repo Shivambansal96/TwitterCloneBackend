@@ -14,6 +14,7 @@ router.route('/follow/:id').post(isAuthenticated, getFollow)
 router.route('/unfollow/:id').post(isAuthenticated, getUnfollow)
 
 
+
 // extra 
 router.route('/update-profile').put(isAuthenticated, upload.fields([
     { name: 'profileImage', maxCount: 1 },
