@@ -2,56 +2,57 @@
 import bcryptjs from 'bcryptjs'
 import { User } from '../models/userSchema.js';
 import jsonWebToken from 'jsonwebtoken'
+import imageModel from '../models/imageSchema.js';
 
 // extra 
-import multer from 'multer';
 
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const dir = './uploads/';
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-        cb(null, dir);
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
+
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         const dir = './uploads/';
+//         if (!fs.existsSync(dir)) {
+//             fs.mkdirSync(dir);
+//         }
+//         cb(null, dir);
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+//     }
+// });
 
 
-export const upload = multer({ storage: storage });
+// export const upload = multer({ storage: storage });
 
 // Profile update controller
-export const updateProfile = async (req, res) => {
-    try {
-        const { bio } = req.body;
-        const profileImage = req.files.profileImage ? req.files.profileImage[0].path : null;
-        const backgroundImage = req.files.backgroundImage ? req.files.backgroundImage[0].path : null;
+// export const updateProfile = async (req, res) => {
+//     try {
+//         const { bio } = req.body;
+//         const profileImage = req.files.profileImage ? req.files.profileImage[0].path : null;
+//         const backgroundImage = req.files.backgroundImage ? req.files.backgroundImage[0].path : null;
 
-        const userId = req.user.userId; // Assuming userId is stored in req.user after authentication
+//         const userId = req.user.userId; // Assuming userId is stored in req.user after authentication
 
-        const updateData = {
-            bio: bio || "",
-        };
+//         const updateData = {
+//             bio: bio || "",
+//         };
 
-        if (profileImage) updateData.profileImage = profileImage;
-        if (backgroundImage) updateData.backgroundImage = backgroundImage;
+//         if (profileImage) updateData.profileImage = profileImage;
+//         if (backgroundImage) updateData.backgroundImage = backgroundImage;
 
-        const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
+//         const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
 
-        res.status(200).json({
-            message: 'Profile updated successfully',
-            user: updatedUser
-        });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            message: 'Internal Server Error',
-        });
-    }
-};
+//         res.status(200).json({
+//             message: 'Profile updated successfully',
+//             user: updatedUser
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({
+//             message: 'Internal Server Error',
+//         });
+//     }
+// };
 
 
 // extra 
@@ -138,7 +139,7 @@ export const Login = async(req, res) => {
         const jsonToken = await jsonWebToken.sign(tokenData, process.env.TOKEN_SECRET, {expiresIn:'2d'})
 
         console.log('JSON TOKEN = ', jsonToken);
-        
+
 
         return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d', httpOnly: true}).json({
             message: `Welcome back ${user.name}`,
@@ -193,7 +194,7 @@ export const getMyProfile = async(req, res) => {
     try {
 
         const id = req.params.id;  
-        console.log(id);
+        // console.log(id);
         const user = await User.findById(id).select("-password");
 
         return res.status(200).json({
@@ -298,3 +299,47 @@ export const getUnfollow = async(req, res) => {
     }
 
 }
+
+
+
+export const updateProfile = async (req, res) => {
+    const userId = req.params.id;
+
+    console.log('USER_ID', userId);
+
+    let profileImage = req.file ? req.file.filename : null;
+
+    try {
+        const updatedData = {};
+        if (profileImage) {
+            updatedData.profileImageSrc = profileImage;
+        }
+        // Add more fields if needed
+        if (req.body.backgroundImageSrc) {
+            updatedData.backgroundImageSrc = req.body.backgroundImageSrc;
+        }
+        if (req.body.bio) {
+            updatedData.bio = req.body.bio;
+        }
+
+        const user = await imageModel.findByIdAndUpdate(userId, updatedData, { new: true, runValidators: true });
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found',
+                success: false,
+            });
+        }
+
+        res.status(200).json({
+            message: 'Profile updated successfully',
+            user,
+            success: true,
+        });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).json({
+            message: 'Internal Server Error',
+            success: false,
+        });
+    }
+};
