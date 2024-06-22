@@ -2,7 +2,7 @@
 import bcryptjs from 'bcryptjs'
 import { User } from '../models/userSchema.js';
 import jsonWebToken from 'jsonwebtoken'
-import imageModel from '../models/imageSchema.js';
+// import imageModel from '../models/imageSchema.js';
 
 // extra 
 
@@ -192,16 +192,13 @@ export const bookmark = async (req, res) => {
 export const getMyProfile = async(req, res) => {
 
     try {
-
         const id = req.params.id;  
         // console.log(id);
         const user = await User.findById(id).select("-password");
-
         return res.status(200).json({
             user,
         })
 
-        
     } catch (error) {
         console.log(error);
     }
@@ -300,46 +297,99 @@ export const getUnfollow = async(req, res) => {
 
 }
 
+//new
+
+// export const updateProfile = async (req, res) => {
+
+//     const loggedInUserId = req.body.id;
+//     const user = await User.findById(loggedInUserId);
+
+//     // const userId = req.params.id;
+
+//     console.log('USER_ID', user);
+
+//     let profileImage = req.file ? req.file.filename : null;
+
+//     try {
+//         const updatedData = {};
+//         if (profileImage) {
+//             updatedData.profileImageSrc = profileImage;
+//         }
+//         // Add more fields if needed
+//         if (req.body.backgroundImageSrc) {
+//             updatedData.backgroundImageSrc = req.body.backgroundImageSrc;
+//         }
+//         if (req.body.bio) {
+//             updatedData.bio = req.body.bio;
+//         }
+
+//         const user = await imageModel.findByIdAndUpdate(userId, updatedData, { new: true, runValidators: true });
+
+//         console.log('CHECKING_USER =', user);
+//         if (!user) {
+//             return res.status(404).json({
+//                 message: 'User not found',
+//                 success: false,
+//             });
+//         }
+
+//         res.status(200).json({
+//             message: 'Profile updated successfully',
+//             user,
+//             success: true,
+//         });
+//     } catch (error) {
+//         console.error('Error updating profile:', error);
+//         res.status(500).json({
+//             message: 'Internal Server Error',
+//             success: false,
+//         });
+//     }
+// };
 
 
-export const updateProfile = async (req, res) => {
-    const userId = req.params.id;
-
-    console.log('USER_ID', userId);
-
-    let profileImage = req.file ? req.file.filename : null;
-
-    try {
-        const updatedData = {};
-        if (profileImage) {
-            updatedData.profileImageSrc = profileImage;
-        }
-        // Add more fields if needed
-        if (req.body.backgroundImageSrc) {
-            updatedData.backgroundImageSrc = req.body.backgroundImageSrc;
-        }
-        if (req.body.bio) {
-            updatedData.bio = req.body.bio;
-        }
-
-        const user = await imageModel.findByIdAndUpdate(userId, updatedData, { new: true, runValidators: true });
-        if (!user) {
-            return res.status(404).json({
-                message: 'User not found',
-                success: false,
-            });
-        }
-
-        res.status(200).json({
-            message: 'Profile updated successfully',
-            user,
-            success: true,
-        });
-    } catch (error) {
-        console.error('Error updating profile:', error);
-        res.status(500).json({
-            message: 'Internal Server Error',
-            success: false,
-        });
-    }
-};
+// export const updateProfile = async (req, res) => {
+//     try {
+//       const loggedInUserId = req.body.id;
+//       const user = await User.findById(loggedInUserId);
+  
+//       if (!user) {
+//         return res.status(404).json({
+//           message: 'User not found',
+//           success: false,
+//         });
+//       }
+  
+//       let profileImage = req.file ? req.file.filename : null;
+//       const updatedData = {};
+  
+//       if (profileImage) {
+//         updatedData.profileImageSrc = profileImage;
+//       }
+  
+//       if (req.body.backgroundImageSrc) {
+//         updatedData.backgroundImageSrc = req.body.backgroundImageSrc;
+//       }
+  
+//       if (req.body.bio) {
+//         updatedData.bio = req.body.bio;
+//       }
+  
+//       const updatedUser = await User.findByIdAndUpdate(loggedInUserId, updatedData, {
+//         new: true,
+//         runValidators: true,
+//       });
+  
+//       res.status(200).json({
+//         message: 'Profile updated successfully',
+//         user: updatedUser,
+//         success: true,
+//       });
+//     } catch (error) {
+//       console.error('Error updating profile:', error);
+//       res.status(500).json({
+//         message: 'Internal Server Error',
+//         success: false,
+//       });
+//     }
+//   };
