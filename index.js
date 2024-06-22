@@ -31,9 +31,14 @@ const corsOptions = {
     origin: 'https://twitter-clone-front-end.vercel.app', 
     credentials: true,
     // optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow these methods
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }
 
 app.use(cors(corsOptions));
+
+
+app.options('*', cors(corsOptions));
 
 
 
