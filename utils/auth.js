@@ -11,7 +11,7 @@ const isAuthenticated = async (req, res, next) => {
     try {
         const jsonToken = req.cookies.jsonToken;
         console.log('JsonTOKEN = ', jsonToken);
-        console.log("Cookies changed: ", req.cookies._vercel_jwt); // Log cookies for debugging
+        console.log("Cookies changed: ", req.cookies); // Log cookies for debugging
     //    console.log("Cookies: ", req.cookies); // Log cookies for debugging
 
         if (!jsonToken) {
