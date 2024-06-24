@@ -141,11 +141,14 @@ export const Login = async(req, res) => {
         console.log('JSON TOKEN = ', jsonToken);
 
 
-        return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d'}).json({
+        return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d', sameSite: 'none',
+            secure: true,
+            path: '/' }).json({
             // , httpOnly: true
             message: `Welcome back ${user.name}`,
             user,
-            success: true
+            success: true,
+            
         })
         
     } catch (error) {
