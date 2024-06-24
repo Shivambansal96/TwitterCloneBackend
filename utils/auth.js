@@ -22,8 +22,6 @@ const isAuthenticated = async (req, res, next) => {
             });
         }
 
-
-
         // Verify the token
         JsonWebToken.verify(jsonToken, process.env.TOKEN_SECRET, (err, decode) => {
             if (err) {

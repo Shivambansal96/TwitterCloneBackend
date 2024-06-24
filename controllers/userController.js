@@ -141,7 +141,8 @@ export const Login = async(req, res) => {
         console.log('JSON TOKEN = ', jsonToken);
 
 
-        return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d', httpOnly: true}).json({
+        return res.status(201).cookie('jsonToken', jsonToken, {expiresIn:'2d'}).json({
+            // , httpOnly: true
             message: `Welcome back ${user.name}`,
             user,
             success: true
