@@ -38,7 +38,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
-app.options('*', cors(corsOptions));
+// app.options('*', cors(corsOptions));
 
 
 
@@ -50,9 +50,12 @@ app.use('/api/v1/tweet', tweetRoutes )
 
 // APIs
 
+const PORT = process.env.PORT || 8008
 
-app.listen(process.env.PORT, () => {
+
+app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${process.env.PORT}`);
 })
 
 
+h
